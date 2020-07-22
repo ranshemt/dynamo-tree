@@ -51,7 +51,7 @@ const StateProvider = (props) => {
     let csv = ''
     function createCsvLineFromNode(node) {
       let csvLine = ''
-      csvLine += '"' + node.name + '"' + ','
+      csvLine += '"' + node.name + '",'
       // csvLine += node.id + ','
       csvLine += node.totalSales + ','
       csvLine += node.total + ','
@@ -77,7 +77,6 @@ const StateProvider = (props) => {
       csv += createCsvLineFromNode(tree[i])
       traverseTree(tree[i])
     }
-    console.log(csv)
     return csv
   }
   //
@@ -95,7 +94,6 @@ const StateProvider = (props) => {
       //
       //user operations
       case 'createUser':
-        console.log('createUser called')
         const newUserID = uuidv4()
         const newUser = {
           id: newUserID,
@@ -146,10 +144,14 @@ const StateProvider = (props) => {
         newState.editedUserID = null
         updateAppLS(newState)
         return newState
+      case 'setDim':
+        const nodeToUpdate = getNodeById(action.payload.id, newState.tree)
+        nodeToUpdate.offsetHeight = action.payload.offsetHeight
+        nodeToUpdate.offsetWidth = action.payload.offsetWidth
+        return newState
       //
       //menu
       case 'exportCSV':
-        console.log('exportCSV')
         const csv = JSON2CSV(newState.tree)
         const blob = new Blob(['\ufeff', csv])
         const url = URL.createObjectURL(blob)

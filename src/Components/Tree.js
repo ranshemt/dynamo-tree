@@ -29,39 +29,16 @@ const Tree = (props) => {
   }
   const level = props.level || 0
   //
-  //
-  //
-  const userRef = React.useRef(null)
-  // const { members, levelll, parentX, parentY, parentName } = props
-  // React.useLayoutEffect(() => {
-  //   console.log('tree renders because props.members change')
-  // }, [members])
-  // React.useLayoutEffect(() => {
-  //   console.log('tree renders because props.levelll change')
-  // }, [levelll])
-  // React.useLayoutEffect(() => {
-  //   console.log('tree renders because props.parentX change')
-  // }, [parentX])
-  // React.useLayoutEffect(() => {
-  //   console.log('tree renders because props.parentY change')
-  // }, [parentY])
-  // React.useLayoutEffect(() => {
-  //   console.log('tree renders because props.parentName change')
-  // }, [parentName])
-  //
-  //
-  //
   return (
     <React.Fragment>
       {props.members.length ? (
         <div level={level}>
           {props.members.map((user, i) => (
             <div key={`level-${level}-${i}`}>
-              <User ref={userRef} {...user} />
+              <User id={user.id} {...user} />
               {level > 0 && (
                 <Line x={user.x} y={user.y} parentX={props.parentX} parentY={props.parentY} />
               )}
-              {/*level > 0 && console.log(`id = ${user.id} ref = ${userRef.current}`)*/}
               {hasChildren(user) ? (
                 <Tree
                   members={user.children}
