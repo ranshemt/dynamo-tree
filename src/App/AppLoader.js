@@ -1,20 +1,20 @@
 import React from 'react'
-//
-import { LS } from '../Assets/consts'
-import App from './App'
-import LoadingScreen from './LoadingScreen'
+
+import { CircularProgress } from '@material-ui/core'
+
 import { StateProvider } from './store.js'
-import { getWindowDimensions } from '../funcs'
-//
+import App from './App'
+
 const AppLoader = () => {
   const [isLoadingApp, setIsLoadingApp] = React.useState(true)
   const [storedData, setStoredData] = React.useState(null)
+
   React.useEffect(() => {
     setIsLoadingApp(true)
-    //
+
     let parsedStoredApp = null
     try {
-      const storedStringApp = localStorage.getItem(LS.app)
+      const storedStringApp = localStorage.getItem('@appKey')
       if (storedStringApp) {
         parsedStoredApp = JSON.parse(storedStringApp)
       } else {
@@ -24,10 +24,10 @@ const AppLoader = () => {
       console.log('error parsing or getting stored app data')
       parsedStoredApp = {}
     }
-    //
+
     let parsedStoredTree = null
     try {
-      const storedStringTree = localStorage.getItem(LS.tree)
+      const storedStringTree = localStorage.getItem('@treeKey')
       if (storedStringTree) {
         parsedStoredTree = JSON.parse(storedStringTree)
       } else {
@@ -37,12 +37,12 @@ const AppLoader = () => {
       console.log('error parsing or getting stored tree data')
       parsedStoredTree = []
     }
-    //
+
     const windowDimensions = getWindowDimensions()
-    //
+
     setStoredData({
       tree: parsedStoredTree,
-      //
+
       error: null,
       addUserMode: false,
       parentID: null,
@@ -57,14 +57,38 @@ const AppLoader = () => {
       theme: parsedStoredApp.theme || 'light',
       direction: parsedStoredApp.direction || 'rtl',
     })
+
     setIsLoadingApp(false)
   }, [])
+
   return isLoadingApp ? (
-    <LoadingScreen />
+    <CircularProgress />
   ) : (
     <StateProvider storedData={storedData}>
       <App />
     </StateProvider>
   )
 }
+
+function getWindowDimensions() {
+  let isIOS = false
+  if (
+    (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.userAgent === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+    !window.MSStream
+  ) {
+    isIOS = true
+  }
+  if (
+    (/iPad|iPhone|iPod/.test(navigator.platform) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+    !window.MSStream
+  ) {
+    isIOS = true
+  }
+  const height = isIOS ? window.screen.height : window.innerHeight
+  const width = isIOS ? window.screen.width : window.innerWidth
+  return { height, width }
+}
+
 export default AppLoader

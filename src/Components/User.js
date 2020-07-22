@@ -1,4 +1,13 @@
 import React from 'react'
+
+import { makeStyles } from '@material-ui/core/styles'
+import clsx from 'clsx'
+
+import EditIcon from '@material-ui/icons/Edit'
+import DoneIcon from '@material-ui/icons/Done'
+import PersonIcon from '@material-ui/icons/Person'
+import GroupAddIcon from '@material-ui/icons/GroupAdd'
+
 import {
   Card,
   CardHeader,
@@ -9,60 +18,46 @@ import {
   IconButton,
   TextField,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
-import PanToolIcon from '@material-ui/icons/PanTool'
-import EditIcon from '@material-ui/icons/Edit'
-import DoneIcon from '@material-ui/icons/Done'
-import PersonIcon from '@material-ui/icons/Person'
-import GroupAddIcon from '@material-ui/icons/GroupAdd'
+
 import { store } from '../App/store'
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: 'absolute',
-    minWidth: 200,
-    maxWidth: '70%',
-    cursor: 'default',
-    zIndex: 10,
-  },
-  avatar: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  focused: {
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 1,
-  },
-}))
-//
+
+import { UserStyles } from '../styles'
+
+const useStyles = makeStyles(UserStyles)
+
 const User = (props) => {
-  const classes = useStyles()
   const myStore = React.useContext(store)
   const state = myStore.state
   const dispatch = myStore.dispatch
+
+  const classes = useStyles()
+
   const [name, setName] = React.useState(props.name)
   const [totalSales, setTotalSales] = React.useState(props.totalSales)
-  //
+
   const addChild = (e) => {
     e.stopPropagation()
+
     if (state.parentID === props.id) {
-      //exit add user mode
-      dispatch({ type: 'addUserMode' })
-      //forget parent
-      dispatch({ type: 'forgetParent' })
+      dispatch({ type: 'addUserMode' }) //exit add user mode
+
+      dispatch({ type: 'forgetParent' }) //forget parent
     } else {
-      //remember parent
-      dispatch({ type: 'rememberParent', payload: props.id })
-      //enter add user mode
-      dispatch({ type: 'addUserMode' })
+      dispatch({ type: 'rememberParent', payload: props.id }) //remember parent
+
+      dispatch({ type: 'addUserMode' }) //enter add user mode
     }
   }
+
   const startEdit = (e) => {
     e.stopPropagation()
+
     dispatch({ type: 'editingUserStart', payload: props.id })
   }
+
   const finishEdit = (e) => {
     e.stopPropagation()
+
     if (name == null || name === '') {
       dispatch({
         type: 'error',
@@ -70,6 +65,7 @@ const User = (props) => {
       })
       return
     }
+
     if (totalSales == null || !Number.isInteger(Number(totalSales)) || totalSales < 0) {
       dispatch({
         type: 'error',
@@ -77,13 +73,18 @@ const User = (props) => {
       })
       return
     }
+
     dispatch({ type: 'updateUser', payload: { id: props.id, name, totalSales } })
+
     dispatch({ type: 'editingUserFinish' })
   }
+
   const isEditing = () => props.id === state.editedUserID
+
   const isAddingChild = () => state.parentID && state.parentID === props.id
+
   const formatSum = (sum) => sum.toLocaleString(undefined, { maximumFraction: 4 })
-  //
+
   return (
     <Card
       className={clsx(classes.root, (isAddingChild() || isEditing()) && classes.focused)}
@@ -110,6 +111,7 @@ const User = (props) => {
           )
         }
       />
+
       <CardContent>
         {isEditing() ? (
           <TextField
@@ -121,18 +123,22 @@ const User = (props) => {
         ) : (
           <>
             <Typography variant="h6">כמות מכירות: {props.totalSales}</Typography>
+
             <Typography variant="body1" style={{ marginTop: 8 }}>
               הכנסה ישירה: {formatSum(props.total)} ₪
             </Typography>
+
             <Typography variant="body1" style={{ marginTop: 8 }}>
               סה"כ עמלות: {formatSum(props.fees)} ₪
             </Typography>
+
             <Typography variant="body1" style={{ marginTop: 8, fontWeight: 'bold' }}>
               סה"כ: {formatSum(props.TOTAL)} ₪
             </Typography>
           </>
         )}
       </CardContent>
+
       <CardActions>
         {/** add child, enabled if marked as parentID or no other user is edited */}
         <IconButton
@@ -142,6 +148,7 @@ const User = (props) => {
         >
           <GroupAddIcon />
         </IconButton>
+
         {/** edit user, enabled if currently being edited or no other is edited */}
         <IconButton
           aria-label="edit"
@@ -154,4 +161,5 @@ const User = (props) => {
     </Card>
   )
 }
+
 export default User
