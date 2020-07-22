@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 //
-const User = React.forwardRef((props, ref) => {
+const User = (props) => {
   const classes = useStyles()
   const myStore = React.useContext(store)
   const state = myStore.state
@@ -89,7 +89,6 @@ const User = React.forwardRef((props, ref) => {
   //
   return (
     <Card
-      ref={ref}
       className={clsx(classes.root, (isAddingChild() || isEditing()) && classes.focused)}
       style={{ top: props.y, left: props.x }}
       elevation={isAddingChild() ? 10 : 5}
@@ -165,5 +164,5 @@ const User = React.forwardRef((props, ref) => {
       </CardActions>
     </Card>
   )
-})
+}
 export default User
