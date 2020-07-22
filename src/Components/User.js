@@ -45,6 +45,10 @@ const User = (props) => {
   //
   const changePos = (e) => {
     e.stopPropagation()
+    dispatch({
+      type: 'error',
+      payload: 'we are sorry but drag & drop is not supported yet',
+    })
   }
   const addChild = (e) => {
     e.stopPropagation()
