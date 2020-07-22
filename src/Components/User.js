@@ -43,13 +43,6 @@ const User = (props) => {
   const [name, setName] = React.useState(props.name)
   const [totalSales, setTotalSales] = React.useState(props.totalSales)
   //
-  const changePos = (e) => {
-    e.stopPropagation()
-    dispatch({
-      type: 'error',
-      payload: 'we are sorry but drag & drop is not supported yet',
-    })
-  }
   const addChild = (e) => {
     e.stopPropagation()
     if (state.parentID === props.id) {
@@ -156,14 +149,6 @@ const User = (props) => {
           onClick={isEditing() ? finishEdit : startEdit}
         >
           {isEditing() ? <DoneIcon /> : <EditIcon />}
-        </IconButton>
-        {/** move child, enabled if currently being edited or no other is edited  */}
-        <IconButton
-          aria-label="move"
-          disabled={(state.editedUserID && !isEditing()) || state.addUserMode}
-          onClick={changePos}
-        >
-          <PanToolIcon />
         </IconButton>
       </CardActions>
     </Card>

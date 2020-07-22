@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     //new standard (firefox)
     scrollbarWidth: 'thin',
-    scrollbarColor: '#689f38',
+    scrollbarColor: '#689f38 rgba(0, 0, 0, 0)',
     //webkit browsers
     '&::-webkit-scrollbar': {
       width: '10px',
